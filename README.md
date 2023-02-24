@@ -53,5 +53,8 @@ Abbiamo testato un po’ di esempi nella documentazione modificando anche degli 
 
 ### Next Step
 
-- Implementare nel modello una LSTM o GRU
-- Migliorare le performance di Stable
+1. Creazione di un dataset utilizzando un modello pre addestrato che abbiamo provato, salvando su un file action,observation_new, reward_new  
+2. Cercare e implementare una LSTM passandogli le sequenze salvate sul file
+3. Usare questa rete come policy per scegliere l'azione
+4. Valutare le performance confrontando i reward e l'azione predetta 
+5. Cambiare il task, e quindi la sequenza di input e vedere come si comporta la rete.
