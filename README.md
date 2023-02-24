@@ -41,7 +41,7 @@ Cambiando env abbiamo testato `env = gym.make('Pendulum-v1')` usando una archite
 
 Abbiamo eseguito un ciclo di train con risultati scadenti. Quindi lo abbiamo eseguito un ulteriore ciclo caricando i pesi dell’iterazione precedente e i risultati sono migliorati notevolmente. 
 
-[pendulum.py](Relazione%204b914fbdb58d4d789cd0b129dd906494/pendulum.py)
+[pendulum.py](Progetto-Ai/Progetto-Iaia-Masiero/TestPendulum.py/)
 
 Cercando altri modelli pre-addestrati abbiamo trovato questa libreria 
 
