@@ -74,7 +74,7 @@ def create_dataset(dqn):
     print("Average: {}".format(np.mean(scores)))
     print("Median: {}".format(np.median(scores)))
     df = pd.DataFrame({'observation': observations_array, 'action': actions_array})
-    df.to_csv("dataset_keras.csv", index=False)
+    df.to_csv("dataset_keras_cartpole.csv", index=False)
     env.close()
 
 

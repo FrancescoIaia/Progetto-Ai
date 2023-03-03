@@ -6,6 +6,8 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 from ast import literal_eval
 
+from keras.utils import plot_model
+
 filename = 'keras-rl/dataset_random.csv'
 
 
@@ -41,6 +43,8 @@ def create_model(states, actions):
         loss="mse",
         optimizer="adam",
         metrics=["accuracy"])
+    plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
+
     return model
 
 
@@ -58,7 +62,7 @@ model = create_model(states, actions)
 model.fit(obs_data, act_data, epochs=5)
 
 scores = []
-episode = 5
+episode = 50
 steps = 500
 for i in range(episode):
     print("Episode: " + str(i) + "/" + str(episode))
@@ -68,7 +72,7 @@ for i in range(episode):
         print("Step: " + str(step) + "/" + str(steps))
         action = np.argmax(model.predict(observation.reshape(1, states)))
         observation, reward, done, _ = env.step(action)
-        env.render()
+        #env.render()
         score += reward
         if done:
             break
