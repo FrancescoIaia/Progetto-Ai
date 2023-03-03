@@ -72,7 +72,7 @@ for i in range(episode):
         print("Step: " + str(step) + "/" + str(steps))
         action = np.argmax(model.predict(observation.reshape(1, states)))
         observation, reward, done, _ = env.step(action)
-        #env.render()
+        env.render()
         score += reward
         if done:
             break
