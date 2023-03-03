@@ -1,7 +1,7 @@
 # Progetto AI Reinforcement Learning 
 ### Emanuele Masiero 872695
 ### Iaia Francesco 869373
-La releazione del progetto è all'interno del [file](Relazione/Relazione.md)
+# La releazione del progetto è all'interno del [file](Relazione/Relazione.md)
 # Struttura Git
 - [Dataset](Dataset): Cartella contenente tutti i dataset commentati nella relazione
 - [CNN_test_cartpole.py](CNN_test_cartpole.py): 
