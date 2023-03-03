@@ -1,7 +1,7 @@
 import gym
 import pandas as pd
 import numpy as np
-from stable_baselines3 import DQN, PPO
+from stable_baselines3 import PPO
 
 env = gym.make("CartPole-v1")
 
