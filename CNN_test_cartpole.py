@@ -6,7 +6,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from ast import literal_eval
 
-filename = 'keras-rl/dataset_keras_cartpole.csv'
+filename = 'Dataset/dataset_keras_cartpole.csv'
 
 def get_data():
     data_train = pd.read_csv(filename)

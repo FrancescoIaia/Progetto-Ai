@@ -8,7 +8,7 @@ from ast import literal_eval
 
 from keras.utils import plot_model
 
-filename = 'keras-rl/dataset_random.csv'
+filename = 'Dataset/dataset_random.csv'
 
 
 def get_data():

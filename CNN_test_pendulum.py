@@ -7,7 +7,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM
 from ast import literal_eval
 
-filename = 'stable-baselines/dataset_sb_pendulum.csv'
+filename = 'Dataset/dataset_sb_pendulum.csv'
 
 
 def get_data():
