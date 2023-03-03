@@ -1,11 +1,10 @@
 import gym
-import random
 import pandas as pd
 import numpy as np
 
 import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Activation, LSTM
+from tensorflow.keras.layers import Dense, Flatten, Activation
 
 from rl.agents import DQNAgent
 from rl.policy import BoltzmannQPolicy
@@ -40,40 +39,41 @@ def build_agent(model, actions):
     return dqn
 
 def create_dataset(dqn):
-    trainingX, trainingY = [], []
+    observations_array, actions_array = [], []
     min_score = 50
-    episode = 50
+    episode = 10
     step = 500
     scores = []
+
     for i in range(episode):
         print("episode: " + str(i) + "/" + str(episode))
         score = 0
         obs = env.reset()
-        training_sampleX, training_sampleY = [], []
+        training_obs, training_act = [], []
         for s in range(step):
-            action = dqn.forward(obs)
-            obs, reward, done, info = env.step(action)
-            env.render()
-
-            one_hot_action = [0., 0.]
+            action = dqn.forward(obs) #np.random.randint(0, 2)
+            one_action = [0., 0.]
             if action == 1:
-                one_hot_action[1] = 1.
+                one_action[1] = 1.
             else:
-                one_hot_action[0] = 1.
-            training_sampleX.append(obs.tolist())
-            training_sampleY.append(one_hot_action)
+                one_action[0] = 1.
+
+            training_obs.append(obs.tolist())
+            training_act.append(one_action)
+
+            obs, reward, done, info = env.step(action)
             score += reward
             if done:
                 break
 
         if score > min_score:
             scores.append(score)
-            trainingX += training_sampleX
-            trainingY += training_sampleY
+            observations_array += training_obs
+            actions_array += training_act
 
     print("Average: {}".format(np.mean(scores)))
     print("Median: {}".format(np.median(scores)))
-    df = pd.DataFrame({'observation': trainingX, 'action': trainingY})
+    df = pd.DataFrame({'observation': observations_array, 'action': actions_array})
     df.to_csv("dataset_keras.csv", index=False)
     env.close()
 
@@ -85,7 +85,7 @@ dqn = build_agent(model, actions)
 dqn.compile(keras.optimizers.Adam(learning_rate=1e-3), metrics=['mae'])
 dqn.load_weights('weights/dqn_weights_2.h5f')
 
-scores = dqn.test(env, nb_episodes=5, visualize=True)
+scores = dqn.test(env, nb_episodes=3, visualize=True)
 print(scores.history['episode_reward'])
 
 create_dataset(dqn)

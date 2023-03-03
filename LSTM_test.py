@@ -1,40 +1,78 @@
 import gym
-import random
-
-import tensorflow as tf
 import numpy as np
 import pandas as pd
-import keras
-from tensorflow.keras.losses import BinaryCrossentropy
-from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, LSTM, TimeDistributed, Input, Activation, Embedding
-from keras.preprocessing.sequence import TimeseriesGenerator
 
-filename = "dataset.csv"
-data_train = pd.read_csv(filename)
+from keras.models import Sequential
+from keras.layers import Dense, LSTM
+from ast import literal_eval
 
-data_features = data_train.copy()
+filename = 'keras-rl/dataset_random.csv'
 
-data_features = np.array(data_features)
-print(data_features)
+
+def get_data():
+    data_train = pd.read_csv(filename)
+    data_train["observation"] = data_train["observation"].apply(lambda x: literal_eval(x))
+    data_train["action"] = data_train["action"].apply(lambda x: literal_eval(x))
+
+    observations = data_train['observation']
+    actions = data_train['action']
+
+    obs, act = [], []
+
+    for i in observations:
+        obs.append(np.array(i))
+
+    for i in actions:
+        act.append(np.array(i))
+
+    obs = np.array(obs)
+    act = np.array(act)
+    return act, obs
+
+
+def create_model(states, actions):
+    model = Sequential()
+
+    model.add(LSTM(32, input_shape=(states, 1)))
+    model.add(Dense(64, activation="relu"))
+    model.add(Dense(actions, activation="softmax"))
+
+    model.compile(
+        loss="mse",
+        optimizer="adam",
+        metrics=["accuracy"])
+    return model
+
 
 env = gym.make("CartPole-v1")
 states = env.observation_space.shape[0]
 actions = env.action_space.n
 
-def create_model(state_size, action_size):
-    model = Sequential()
+act_data, obs_data = get_data()
 
-    model.add(LSTM(32, input_shape=(state_size, 2)))
-    model.add(Dense(action_size))
+print(act_data)
+print(obs_data)
 
-    model.compile(loss='mse', optimizer=keras.optimizers.Adam(learning_rate=0.001))
-    #model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=["accuracy"])
-    return model
+model = create_model(states, actions)
 
-model = build_model(states, actions)
+model.fit(obs_data, act_data, epochs=5)
 
-steps_per_epoch = 20
-history = model.fit(data_features, data_features, steps_per_epoch=steps_per_epoch)
+scores = []
+episode = 5
+steps = 500
+for i in range(episode):
+    print("Episode: " + str(i) + "/" + str(episode))
+    score = 0
+    observation = env.reset()
+    for step in range(steps):
+        print("Step: " + str(step) + "/" + str(steps))
+        action = np.argmax(model.predict(observation.reshape(1, states)))
+        observation, reward, done, _ = env.step(action)
+        env.render()
+        score += reward
+        if done:
+            break
+    scores.append(score)
 
-
+print("Average: {}".format(np.mean(scores)))
+print("Median: {}".format(np.median(scores)))
