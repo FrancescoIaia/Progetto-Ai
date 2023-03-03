@@ -47,7 +47,7 @@ print("Average: {}".format(np.mean(scores)))
 print("Median: {}".format(np.median(scores)))
 
 df = pd.DataFrame({'observation': observations_array, 'action': actions_array})
-df.to_csv("dataset_sb_cartpole.csv", index=False)
+df.to_csv("Dataset/dataset_sb_cartpole.csv", index=False)
 env.close()
 
 

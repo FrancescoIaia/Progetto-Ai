@@ -6,7 +6,7 @@ from stable_baselines3 import DDPG
 env = gym.make("Pendulum-v1")
 
 model = DDPG("MlpPolicy", env, verbose=1)
-model.learn(total_timesteps=10_000)
+model.learn(total_timesteps=5_000)
 
 trainingX, trainingY = [], []
 vec_env = model.get_env()

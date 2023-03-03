@@ -5,7 +5,7 @@
 # Struttura Git
 - [Dataset](Dataset): Cartella contenente tutti i dataset commentati nella relazione
 - [CNN_test_cartpole.py](CNN_test_cartpole.py): 
-- [LSTM_test.py](LSTM_test.py): 
+- [LSTM_test.py](LSTM_test_cartpole.py): 
 - [README.md](README.md): Questo Readme
 ## Keras-rl
 Dentro questa cartella ci sono tutti i file che utilizzano la libreria Keras-rl

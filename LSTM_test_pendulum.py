@@ -1,10 +1,9 @@
 import gym
 import numpy as np
 import pandas as pd
-import keras
 
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM
+from keras.layers import Dense, LSTM
 from ast import literal_eval
 
 filename = 'Dataset/dataset_keras_pendulum.csv'
@@ -31,39 +30,25 @@ def get_data():
     return act, obs
 
 
-def create_model(obs, state):
+def create_model(states, actions):
     model = Sequential()
 
-    model.add(Dense(128, input_shape=(obs,), activation="relu"))
-    model.add(Dropout(0.6))
-
-    model.add(Dense(256, activation="relu"))
-    model.add(Dropout(0.6))
-
-    model.add(Dense(256, activation="relu"))
-    model.add(Dropout(0.6))
-
-    model.add(Dense(128, activation="relu"))
-    model.add(Dropout(0.6))
-
-    model.add(Dense(state, activation="linear"))
+    model.add(LSTM(32, input_shape=(states, 1)))
+    model.add(Dense(64, activation="relu"))
+    model.add(Dense(actions, activation="linear"))
 
     model.compile(
         loss="mse",
-        optimizer="adam",
-    )
+        optimizer="adam")
 
     return model
 
 
-act_data, obs_data = get_data()
-# env = gym.make("CartPole-v1")
-# obs = env.observation_space.shape[0]
-# action = env.action_space.n
-
 env = gym.make("Pendulum-v1")
 obs = env.observation_space.shape[0]
 action = env.action_space.shape[0]
+
+act_data, obs_data = get_data()
 
 print(act_data)
 print(obs_data)

@@ -188,7 +188,7 @@ Dato un limite massimo di reward di 500 abbiamo visto che il dataset, comunque l
 ### Test senza modello pre-trained
 
 ```python
-#output CNN con input dataset_random.csv
+#output CNN con input dataset_random_cartpole.csv
 Episode: 50/50
 
 Average: 364.62
@@ -242,14 +242,14 @@ Dato in input dataset_random.csv alla rete i risultati:
 
 ```python
 #Run 1
-#output LSTM con input dataset_random.csv
+#output LSTM con input dataset_random_cartpole.csv
 Episode: 50/50
 
 Average: 500.0
 Median: 500.0
 
 #Run 2 
-#output LSTM con input dataset_random.csv
+#output LSTM con input dataset_random_cartpole.csv
 
 Episode: 50/50
 Average: 423.64
