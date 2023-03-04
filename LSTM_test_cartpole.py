@@ -6,10 +6,7 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 from ast import literal_eval
 
-from keras.utils import plot_model
-
 filename = 'Dataset/dataset_random_cartpole.csv'
-
 
 def get_data():
     data_train = pd.read_csv(filename)
@@ -30,7 +27,6 @@ def get_data():
     obs = np.array(obs)
     act = np.array(act)
     return act, obs
-
 
 def create_model(states, actions):
     model = Sequential()
@@ -57,10 +53,10 @@ print(obs_data)
 
 model = create_model(states, actions)
 
-model.fit(obs_data, act_data, epochs=5)
+model.fit(obs_data, act_data, epochs=50)
 
 scores = []
-episode = 50
+episode = 10
 steps = 500
 for i in range(episode):
     print("Episode: " + str(i) + "/" + str(episode))

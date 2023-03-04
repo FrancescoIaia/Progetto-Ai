@@ -11,7 +11,7 @@ from rl.random import OrnsteinUhlenbeckProcess
 
 
 def create_dataset(agent):
-    trainingX, trainingY = [], []
+    observations_array, actions_array = [], []
     episode = 100
     step = 200
     scores = []
@@ -19,39 +19,37 @@ def create_dataset(agent):
         print("episode: " + str(i) + "/" + str(episode))
         score = 0
         obs = env.reset()
-        training_sampleX, training_sampleY = [], []
+        training_obs, training_act = [], []
         for s in range(step):
             action = agent.forward(obs)
             obs, reward, done, info = env.step(action)
-            # env.render()
+            env.render()
 
-            training_sampleX.append(obs.tolist())
-            training_sampleY.append(action)
+            training_obs.append(obs.tolist())
+            training_act.append(action)
             score += reward
             if done:
                 break
 
         scores.append(score)
-        trainingX += training_sampleX
-        trainingY += training_sampleY
+        observations_array += training_obs
+        actions_array += training_act
 
     print("Average: {}".format(np.mean(scores)))
     print("Median: {}".format(np.median(scores)))
-    df = pd.DataFrame({'observation': trainingX, 'action': trainingY})
+    df = pd.DataFrame({'observation': observations_array, 'action': actions_array})
     df.to_csv("dataset_keras_pendulum.csv", index=False)
     env.close()
 
 
 ENV_NAME = 'Pendulum-v1'
 
-# Get the environment and extract the number of actions.
 env = gym.make(ENV_NAME)
 np.random.seed(123)
 env.seed(123)
 assert len(env.action_space.shape) == 1
 nb_actions = env.action_space.shape[0]
 
-# Next, we build a very simple model.
 actor = Sequential()
 actor.add(Flatten(input_shape=(1,) + env.observation_space.shape))
 actor.add(Dense(16))
@@ -89,7 +87,6 @@ agent.compile(keras.optimizers.Adam(learning_rate=.001, clipnorm=1.), metrics=['
 
 agent.fit(env, nb_steps=15000, visualize=False, verbose=1, nb_max_episode_steps=200)
 
-# Finally, evaluate our algorithm for 5 episodes.
 agent.test(env, nb_episodes=5, visualize=True, nb_max_episode_steps=200)
 
 create_dataset(agent)

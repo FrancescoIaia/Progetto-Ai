@@ -64,10 +64,10 @@ print(obs_data)
 
 model = create_model(states, actions)
 
-model.fit(obs_data, act_data, epochs=5)
+model.fit(obs_data, act_data, epochs=50)
 
 scores = []
-episode = 5
+episode = 10
 steps = 500
 for i in range(episode):
     print("Episode: " + str(i) + "/" + str(episode))
