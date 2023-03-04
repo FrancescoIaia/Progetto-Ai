@@ -101,9 +101,30 @@ Il problema Pendulum è un problema più complesso rispetto a CartPole. In quest
     $$
     
 
+## Cenni di teoria
+
 ### DQN Policy
 
 Una **policy** nel Reinforcement Learning è una funzione che mappa uno stato dell'ambiente ad un'azione da eseguire. La **Deep Q-Network** (DQN) è un algoritmo di apprendimento di Reinforcement Learning che utilizza una rete neurale per approssimare la funzione Q, ovvero la funzione che indica il valore di una coppia stato-azione. La policy DQN viene quindi definita come la scelta dell'azione che massimizza il valore di Q per lo stato corrente. La rete neurale viene addestrata utilizzando un algoritmo di ottimizzazione per minimizzare la differenza tra il valore di Q stimato e il valore di Q atteso, calcolato utilizzando la regola di Bellman.
+
+### CNN (Convolutional Neural Network)
+
+è un tipo di rete neurale che si basa sull’operazione matematica della convoluzione ed è un tipo di rete neurale feed-forward con un pattern ispirato alla corteccia visiva degli esseri umanie sono variazioni di percettroni multistrato.
+
+P composta da più layer come 
+
+- Convolutional
+- Pooling
+- Fully Connected (dense)
+- Pesi
+
+![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled.png)
+
+### LSTM (Long Short Term Memory)
+
+Sono un tipo speciale di RNN (Recurrent Neural Network) che sono state progettate per mantenere in memoria e quindi funzionare meglio come una mente umana. è composta da celle, porte di input, porte di output e porte di dimenticanza, quindi ad ogni iterazione i valori passano da queste porte.
+
+![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%201.png)
 
 # Creazione del dataset
 
@@ -128,134 +149,262 @@ Il dataset è stato salvato su un file .csv con la seguente struttura:
 
 Sul git sono presenti i seguenti file csv :
 
+Cartpole
+
+- dataset_random.csv: costruito eseguendo azioni in maniera casuale, salvando azioni e osservazioni con un buon reward con una lunghezza di circa 20000 entry su cartpole
 - dataset.csv: costruito utilizzando un modello pre-addestrato di Stable-Baselines3 con una lunghezza di circa 2000 entry
 - [dataset_keras.cvs](https://github.com/FrancescoIaia/Progetto-Ai/blob/main/keras-rl/dataset_keras.csv): costruito utilizzando un modello pre-addestrato di Keras-rl con una lunghezza di circa 5000 entry
-- dataset_random.csv: costruito eseguendo azioni in maniera casuale, salvando azioni e osservazioni con un buon reward con una lunghezza di circa 20000 entry
-- …
 
-# Test CNN
+Pendulum
 
-## CartPole
+- dataset_sb_cartpole: costruito con stable-baseline con circa 2000 entry per il problema del cartpole
+- dataset_sb_pendulum: costruito con stable-baseline per il problema del pendolo circa 20000 entry
 
-La CNN che abbiamo testato è la seguente:
+# Problema CartPole
 
-```python
-#file git CNN_test
-def create_model(states, actions):
-    model = Sequential()
+## CNN
 
-    model.add(Dense(128, input_shape=(states,), activation="relu"))
-    model.add(Dropout(0.6))
+- Modello
+    
+    La CNN che abbiamo testato è la seguente:
+    
+    ```python
+    #file git CNN_test_cartpole
+    def create_model(states, actions):
+        model = Sequential()
+    
+        model.add(Dense(128, input_shape=(states,), activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(256, activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(512, activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(256, activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(128, activation="relu"))
+        model.add(Dropout(0.6))
+        model.add(Dense(actions, activation="softmax"))
+    
+        model.compile(
+            loss="categorical_crossentropy",
+            optimizer="adam",
+            metrics=["accuracy"])
+        return model
+    ```
+    
+    ![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%202.png)
+    
+    Attraverso il comando `model.fit(obs_data, act_data, epochs=50)` abbiamo addestrato la rete per 5 epoche su i dataset creati.
+    
+    Con il comando `model.predict(observation.reshape(1, states))` abbiamo utilizzato il modello addestrato come policy per scegliere l’azione da eseguire in base all’osservazione ottenuta.
+    
+- Test
+    
+    ### Test con dataset creato da Keras-rl
+    
+    ```python
+    #output CNN con input dataset_kesar.csv
+    Episode: 50/50
+    
+    Average: 500.0
+    Median: 500.0
+    ```
+    
+    Dato un limite massimo di reward di 500 abbiamo visto che il dataset, comunque limitato in lunghezza (con solo 5k osservazioni) ha fornito un ottimo risultato di 500 reward in media
+    
+    ### Test senza modello pre-trained
+    
+    ```python
+    #output CNN con input dataset_random_cartpole.csv
+    Episode: 50/50
+    
+    Average: 295.5
+    Median: 269.0
+    ```
+    
+    Nonostante la quantità maggiore di osservazioni i risultati sono stati peggiori, questo perché le osservazioni salvate hanno un reward medio inferiore rispetto al dataset_keras.csv 
+    
 
-    model.add(Dense(256, activation="relu"))
-    model.add(Dropout(0.6))
+## LSTM
 
-    model.add(Dense(512, activation="relu"))
-    model.add(Dropout(0.6))
+- Modello
+    
+    La LSTM che abbiamo testato è la seguente:
+    
+    ```python
+    #file git LSTM_test_cartpole
+    def create_model(states, actions):
+        model = Sequential()
+    
+        model.add(LSTM(32, input_shape=(states, 1)))
+        model.add(Dense(64, activation="relu"))
+        model.add(Dense(actions, activation="softmax"))
+    
+        model.compile(
+            loss="mse",
+            optimizer="adam",
+            metrics=["accuracy"])
+        return model
+    ```
+    
+    ![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%203.png)
+    
+    Come per la CNN abbiamo addestrato la rete per 50 epoche usando gli stessi dataset.
+    
+- Test
+    
+    ### Test con dataset creato da Keras-rl
+    
+    Dato in input databese_keras_cartpole.csv alla rete i risultati:
+    
+    ```python
+    #output LSTM con input dataset_keras.csv
+    Episode: 50/50
+    
+    Average: 497.34
+    Median: 500.0
+    ```
+    
+    Dato in input dataset_random.csv alla rete i risultati:
+    
+    ```python
+    #Run 1
+    #output LSTM con input dataset_random_cartpole.csv
+    Episode: 50/50
+    
+    Average: 500.0
+    Median: 500.0
+    
+    #Run 2 
+    #output LSTM con input dataset_random_cartpole.csv
+    
+    Episode: 50/50
+    Average: 423.64
+    Median: 440.0
+    ```
+    
+    In generale la LSTM ha ottenuto dei risultati migliori rispetto alla CNN, ma facendo numerose prove ci siamo accorti che i risultati ottenuti sono molto altalenanti e possono variare di molto ripetendo l’apprendimento della rete. Come si vede dalla seconda esecuzione. 
+    
 
-    model.add(Dense(256, activation="relu"))
-    model.add(Dropout(0.6))
+# Problema Pendulum
 
-    model.add(Dense(128, activation="relu"))
-    model.add(Dropout(0.6))
-    model.add(Dense(actions, activation="softmax"))
+## CNN
 
-    model.compile(
-        loss="categorical_crossentropy",
-        optimizer="adam",
-        metrics=["accuracy"])
-    return model
-```
+- Modello
+    
+    La CNN testata per il pendulum è la seguente:
+    
+    ```python
+    #file git CNN_test_pendulm
+    def create_model(obs, state):
+        model = Sequential()
+    
+        model.add(Dense(128, input_shape=(obs,), activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(256, activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(256, activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(128, activation="relu"))
+        model.add(Dropout(0.6))
+    
+        model.add(Dense(state, activation="linear"))
+    
+        model.compile(
+            loss="mse",
+            optimizer="adam",
+        )
+    
+        return model
+    ```
+    
+    In questo caso lo spazio delle azioni è continuo e non più discreto.
+    
+    Per questo nell’ultimo livello abbiamo messo una funzione di attivazione lineare al posto di una softmax.
+    
+- Test
+    
+    ### Test con dataset creato da Keras-rl
+    
+    ```python
+    #output CNN con input dataset_keras_pendulum.csv
+    Episode: 10/10
+    
+    Average: -1133.3603515625
+    Median: -1216.611083984375
+    ```
+    
+    ### Test con dataset_sb_pendulum.csv
+    
+    ```python
+    #output CNN con input dataset_sb_pendulum.csv
+    Episode: 10/10
+    
+    Average: -845.4319458007812
+    Median: -813.4265747070312
+    ```
+    
+    Considerando che il reward massimo ottenibile è 0, la CNN non si è comportata benissimo con nessuno dei dataset testati.
+    
 
-![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled.png)
+## LSTM
 
-Attraverso il comando `model.fit(obs_data, act_data, epochs=5)` abbiamo addestrato la rete per 5 epoche su i dataset creati.
-
-Con il comando `model.predict(observation.reshape(1, states))` abbiamo utilizzato il modello addestrato come policy per scegliere l’azione da eseguire in base all’osservazione ottenuta.
-
-### Test con Keras-Rl
-
-```python
-#output CNN con input dataset_kesar.csv
-Episode: 50/50
-
-Average: 492.9
-Median: 500.0
-```
-
-Dato un limite massimo di reward di 500 abbiamo visto che il dataset, comunque limitato in lunghezza (con solo 5k valori) ha fornito un ottimo risultato di 492 reward in media
-
-### Test senza modello pre-trained
-
-```python
-#output CNN con input dataset_random_cartpole.csv
-Episode: 50/50
-
-Average: 364.62
-Median: 403.0
-
-```
-
-Nonostante la quantità maggiore di osservazioni i risultati sono stati peggiori, questo perché le osservazioni salvate hanno un reward medio inferiore rispetto al dataset_keras.csv 
-
-## Pendulum
-
-## Test LSTM
-
-## CartPole
-
-La LSTM che abbiamo testato è la seguente:
-
-```python
-#file git LSTM_test
-def create_model(states, actions):
-    model = Sequential()
-
-    model.add(LSTM(32, input_shape=(states, 1)))
-    model.add(Dense(64, activation="relu"))
-    model.add(Dense(actions, activation="softmax"))
-
-    model.compile(
-        loss="mse",
-        optimizer="adam",
-        metrics=["accuracy"])
-    return model
-```
-
-![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%201.png)
-
-Come per la CNN abbiamo addestrato la rete per 5 epoche usando gli stessi dataset.
-
-### Test con Keras-Rl
-
-Dato in input databese_keras.csv alla rete i risultati:
-
-```python
-#output LSTM con input dataset_keras.csv
-Episode: 50/50
-
-Average: 497.34
-Median: 500.0
-```
-
-Dato in input dataset_random.csv alla rete i risultati:
-
-```python
-#Run 1
-#output LSTM con input dataset_random_cartpole.csv
-Episode: 50/50
-
-Average: 500.0
-Median: 500.0
-
-#Run 2 
-#output LSTM con input dataset_random_cartpole.csv
-
-Episode: 50/50
-Average: 423.64
-Median: 440.0
-```
-
-In generale la LSTM ha ottenuto dei risultati migliori rispetto alla CNN, ma facendo numerose prove ci siamo accorti che i risultati ottenuti sono molto altalenanti e possono variare di molto ripetendo l’apprendimento della rete. Come si vede dalle 2 run 
-
-## Pendulum
+- Modello
+    
+    La LSTM testata per questo task è la seguete:
+    
+    ```python
+    def create_model(states, actions):
+        model = Sequential()
+    
+        model.add(LSTM(32, input_shape=(states, 1)))
+        model.add(Dense(64, activation="relu"))
+        model.add(Dense(actions, activation="linear"))
+    
+        model.compile(
+            loss="mse",
+            optimizer="adam")
+    
+        return model
+    ```
+    
+    Come per la CNN cambia la funzione di attivazione nell’ultimo strato da softmax a linear.
+    
+- Test
+    
+    ### Test con dataset sb_pendulum
+    
+    Abbiamo fatto svariati test con il dataset nel momento in cui abbiamo visto che con il dataset completo (100k) veniva estremamente preciso con un reward di media di -147. Da qui abbiamo iniziato a togliere entry del dataset.
+    
+    ```python
+    Episode: 10/10
+    #100k
+    Average: -147.85247802734375
+    Median: -127.0317153930664
+    ```
+    
+    Abbbiamo provato a dimezzare il dataset vedendo che i valori erano comunque alternanti, come riscontrato nel problema del cartpole sempre con la LSTM. Poi abbiamo dimezzato ancora e i valori peggioravano leggeremente fin quando non siamo arrivati a 10k entry e la rete ha smesso di imparare in maniera efficace. Quindi la LSTM impara molto bene con un alto quantitativo di dati
+    
+    ```python
+    #50k
+    Average: -394.5376892089844
+    Median: -238.49790954589844
+    #50k run 2 
+    Average: -189.18484497070312
+    Median: -118.91258239746094
+    
+    #25k
+    Average: -372.36456298828125
+    Median: -120.34661865234375
+    
+    #10k
+    Average: -1498.6988525390625
+    Median: -1508.775146484375
+    ```
