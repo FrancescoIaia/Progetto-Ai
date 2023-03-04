@@ -109,22 +109,27 @@ Una **policy** nel Reinforcement Learning è una funzione che mappa uno stato de
 
 ### CNN (Convolutional Neural Network)
 
-è un tipo di rete neurale che si basa sull’operazione matematica della convoluzione ed è un tipo di rete neurale feed-forward con un pattern ispirato alla corteccia visiva degli esseri umanie sono variazioni di percetroni multistrato.
+La CNN è un tipo di rete neurale che si basa sull’operazione matematica della convoluzione, normalmente utilizza questi strati per estrarre le caratteristiche più rilevanti dalle immagini. 
 
-P composta da più layer come 
+I dei layer più diffusi sono
 
 - Convolutional
 - Pooling
-- Fully Connected (dense)
-- Pesi
+    - Fully Connected (dense), layer di classificazione
 
-![Untitled](Relazione/Untitled.png)
+Però nel nostro caso usiamo l’ultima parte di una CNN lo strato fully connected.
+
+![Untitled](immagini/Untitled.png)
 
 ### LSTM (Long Short Term Memory)
 
-Sono un tipo speciale di RNN (Recurrent Neural Network) che sono state progettate per mantenere in memoria e quindi funzionare meglio come una mente umana. è composta da celle, porte di input, porte di output e porte di dimenticanza, quindi ad ogni iterazione i valori passano da queste porte.
+Le LSTM sono una delle architetture studiate a partire dalle reti neurali ricorrenti (RNN) che ha ricevuto più attenzione negli ultimi anni.
 
-![Untitled](Relazione/Untitled%201.png)
+Uno dei vantaggi principali delle LSTM è la capacità di apprendere da lunghe sequenze temporali e conservarne la memoria.
+
+L’idea alla base dell’architettura LSTM è quella che ad ogni time step alcuni gate sono utilizzati per controllare il passaggio di informazioni lungo le sequenze che sono in grado di catturare dipendenze sul lungo termine più accuratamente.
+
+![Untitled](immagini/Untitled%201.png)
 
 # Creazione del dataset
 
@@ -153,12 +158,13 @@ Cartpole
 
 - dataset_random.csv: costruito eseguendo azioni in maniera casuale, salvando azioni e osservazioni con un buon reward con una lunghezza di circa 20000 entry su cartpole
 - dataset.csv: costruito utilizzando un modello pre-addestrato di Stable-Baselines3 con una lunghezza di circa 2000 entry
-- [dataset_keras.cvs](https://github.com/FrancescoIaia/Progetto-Ai/blob/main/keras-rl/dataset_keras.csv): costruito utilizzando un modello pre-addestrato di Keras-rl con una lunghezza di circa 5000 entry
+- dataset_keras.cvs: costruito utilizzando un modello pre-addestrato di Keras-rl con una lunghezza di circa 5000 entry
 
 Pendulum
 
 - dataset_sb_cartpole: costruito con stable-baseline con circa 2000 entry per il problema del cartpole
 - dataset_sb_pendulum: costruito con stable-baseline per il problema del pendolo circa 20000 entry
+- dataset_random_pendulum: costruito creando una azione random da -2 a 2 stampando l’osservazione con circa 400k entry
 
 # Problema CartPole
 
@@ -196,37 +202,37 @@ Pendulum
         return model
     ```
     
-    ![Untitled](Relazione/Untitled%202.png)
+    ![Untitled](immagini/Untitled%202.png)
     
     Attraverso il comando `model.fit(obs_data, act_data, epochs=50)` abbiamo addestrato la rete per 5 epoche su i dataset creati.
     
-    Con il comando `model.predict(observation.reshape(1, states))` abbiamo utilizzato il modello addestrato come policy per scegliere l’azione da eseguire in base all’osservazione ottenuta.
+    Con il comando `model.predict(observation.reshape(1, states))` abbiamo utilizzato il modello addestrato come **policy** per scegliere l’azione da eseguire in base all’osservazione ottenuta.
     
 - Test
     
     ### Test con dataset creato da Keras-rl
     
     ```python
-    #output CNN con input dataset_kesar.csv
-    Episode: 50/50
+    #output CNN con input dataset_kesar_cartpole.csv
+    Episode: 10/10
     
     Average: 500.0
     Median: 500.0
     ```
     
-    Dato un limite massimo di reward di 500 abbiamo visto che il dataset, comunque limitato in lunghezza (con solo 5k osservazioni) ha fornito un ottimo risultato di 500 reward in media
+    Dato un limite massimo di reward di 500 abbiamo visto che il dataset, comunque limitato in lunghezza (con solo 5k osservazioni) ha fornito un ottimo risultato di 500 reward in media, quindi su 10 prove effettate la rete ha risolto sempre il problema.
     
     ### Test senza modello pre-trained
     
     ```python
     #output CNN con input dataset_random_cartpole.csv
-    Episode: 50/50
+    Episode: 10/10
     
     Average: 295.5
     Median: 269.0
     ```
     
-    Nonostante la quantità maggiore di osservazioni i risultati sono stati peggiori, questo perché le osservazioni salvate hanno un reward medio inferiore rispetto al dataset_keras.csv 
+    Nonostante la quantità maggiore di osservazioni i risultati sono stati peggiori, questo perché le osservazioni salvate hanno un reward medio inferiore rispetto al dataset_keras_cartpole.csv 
     
 
 ## LSTM
@@ -251,7 +257,7 @@ Pendulum
         return model
     ```
     
-    ![Untitled](Relazione/Untitled%203.png)
+    ![Untitled](immagini/Untitled%203.png)
     
     Come per la CNN abbiamo addestrato la rete per 50 epoche usando gli stessi dataset.
     
@@ -263,26 +269,28 @@ Pendulum
     
     ```python
     #output LSTM con input dataset_keras.csv
-    Episode: 50/50
+    Episode: 10/10
     
     Average: 497.34
     Median: 500.0
     ```
     
-    Dato in input dataset_random.csv alla rete i risultati:
+    ### Test senza modello pre-trained
+    
+    Dato in input dataset_random_cartpole.csv alla rete i risultati:
     
     ```python
     #Run 1
     #output LSTM con input dataset_random_cartpole.csv
-    Episode: 50/50
+    Episode: 10/10
     
     Average: 500.0
     Median: 500.0
     
     #Run 2 
     #output LSTM con input dataset_random_cartpole.csv
+    Episode: 10/10
     
-    Episode: 50/50
     Average: 423.64
     Median: 440.0
     ```
@@ -341,7 +349,7 @@ Pendulum
     Median: -1216.611083984375
     ```
     
-    ### Test con dataset_sb_pendulum.csv
+    ### Test con dataset creato da stable-baseline
     
     ```python
     #output CNN con input dataset_sb_pendulum.csv
@@ -361,6 +369,7 @@ Pendulum
     La LSTM testata per questo task è la seguente:
     
     ```python
+    #file git LSTM_test_pendulm
     def create_model(states, actions):
         model = Sequential()
     
@@ -379,20 +388,52 @@ Pendulum
     
 - Test
     
-    ### Test con dataset sb_pendulum
+    ### Test con dataset creato random
+    
+    Con questo test abbiamo capito l’importanza di un dataset già addestrato dato che con circa 400k osservazioni comunque viene una media estremamente scarsa
+    
+    ```python
+    Episode 10/10
+    Average: -1233.673583984375
+    Median: -1239.1529541015625
+    ```
+    
+    ### Test con dataset creato da Keras-rl
+    
+    Test eseguito con il dataset ricavato da keras-rl su 20k entry funziona sempre abbastanza bene. Abbiamo provato a fare una run con 10k entry per compararlo a quello di stable-baseline però abbiamo visto che a differenza dell’altro questo funziona molto bene anche con meno dati, quindi possiamo supporre che il modello di keras abbia imparato meglio il problema.
+    
+    ```python
+    #output LSTM con input dataset_keras_pendulum.csv
+    Episode: 10/10
+    
+    Average: -137.3228759765625
+    Median: -126.70427703857422
+    
+    #altra run
+    Average: -182.29942321777344
+    Median: -128.70614624023438
+    
+    #run dataset 10k
+    Average: -168.82630920410156
+    Median: -126.33491516113281
+    ```
+    
+    ### Test con dataset creato da stable-baseline
     
     Abbiamo fatto svariati test con il dataset nel momento in cui abbiamo visto che con il dataset completo (100k) veniva estremamente preciso con un reward di media di -147. Da qui abbiamo iniziato a togliere entry del dataset.
     
     ```python
+    #output LSTM con input dataset_sb_pendulum.csv
     Episode: 10/10
-    #100k
+    
     Average: -147.85247802734375
     Median: -127.0317153930664
     ```
     
-    Abbbiamo provato a dimezzare il dataset vedendo che i valori erano comunque alternanti, come riscontrato nel problema del cartpole sempre con la LSTM. Poi abbiamo dimezzato ancora e i valori peggioravano leggeremente fin quando non siamo arrivati a 10k entry e la rete ha smesso di imparare in maniera efficace. Quindi la LSTM impara molto bene con un alto quantitativo di dati
+    Abbiamo provato a dimezzare il dataset vedendo che i valori erano comunque alternanti, come riscontrato nel problema del cartpole sempre con la LSTM. Poi abbiamo dimezzato ancora e i valori peggioravano leggermente fin quando non siamo arrivati a 10k entry e la rete ha smesso di imparare in maniera efficace. Quindi la LSTM impara molto bene con un alto quantitativo di dati
     
     ```python
+    #output LSTM con input dataset_sb_pendulum.csv con entry ridotte
     #50k
     Average: -394.5376892089844
     Median: -238.49790954589844
@@ -408,3 +449,10 @@ Pendulum
     Average: -1498.6988525390625
     Median: -1508.775146484375
     ```
+    
+
+# Conclusioni
+
+Per scrivere delle conclusioni bisogna fare una distinzione tra i due problemi. Con i dataset creati con una rete già addestrata le prestazioni della LSTM e della CNN sono estremamente simili dando risultati praticamente perfetti in entrambi i casi. La differenza più grande si nota quando abbiamo usato il dataset con osservazioni casuali, dove la LSTM ha avuto dei risultati nettamente migliori. A parità di dataset e epoche di addestramento. Questo secondo noi è dato dal fatto che la LSTM avendo le celle di memoria impara ed immagazzina molto meglio i dati utili alla risoluzione del problema.
+
+Mentre per il problema del Pendulum la LSTM ha ottenuto dei risultati nettamente migliori rispetto alla CNN utilizzano ogni tipo di dataset, sia creato con stable-baseline che con keras-rl
