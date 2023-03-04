@@ -4,7 +4,7 @@
 
 L'obiettivo principale di questo progetto è di apprendere come costruire e strutturare diversi tipi di reti neurali e di testarle su problemi di Reinforcement Learning, al fine di sviluppare una comprensione più approfondita di come funziona questa tecnologia e di come può essere applicata in diversi contesti.
 
-Inoltre, durante il corso del progetto, verranno affrontati una serie di sotto-obiettivi, tra cui la comprensione dei principi fondamentali del Reinforcement Learning, l'analisi di diversi algoritmi di apprendimento automatico utilizzati nelle reti neurali, lo studio delle tecniche di elaborazione dei dati utilizzate per preparare i dati di input per le reti neurali, e l'implementazione di un'architettura di rete neurale completa per risolvere problemi di Reinforcement Learning.
+Inoltre, durante il corso del progetto, verranno affrontati una serie di sotto-obiettivi, tra cui la comprensione dei principi fondamentali del Reinforcement Learning, l'analisi di diversi algoritmi di apprendimento automatico utilizzati nelle reti neurali, lo studio delle tecniche di elaborazione dei dati utilizzate per preparare i dati di input per le reti neurali, e l'implementazione di un'architettura di rete neurale per risolvere problemi di Reinforcement Learning.
 
 ## Tools Usati
 
@@ -30,7 +30,7 @@ Ogni ambiente di Gym è costruito con la stessa struttura
     
 - **Observation Low-High**
     
-    **L’observation** è una descrizione di tutti i parametri che compongono un ambiente virtuale. In questo caso Low-High perchè ci sono i valori minimi e massimi di ogni variabile 
+    **L’observation** è una descrizione di tutti i parametri che compongono un ambiente virtuale. In questo caso Low-High perché ci sono i valori minimi e massimi di ogni variabile 
     
 - **Reward**
     
@@ -109,7 +109,7 @@ Una **policy** nel Reinforcement Learning è una funzione che mappa uno stato de
 
 ### CNN (Convolutional Neural Network)
 
-è un tipo di rete neurale che si basa sull’operazione matematica della convoluzione ed è un tipo di rete neurale feed-forward con un pattern ispirato alla corteccia visiva degli esseri umanie sono variazioni di percettroni multistrato.
+è un tipo di rete neurale che si basa sull’operazione matematica della convoluzione ed è un tipo di rete neurale feed-forward con un pattern ispirato alla corteccia visiva degli esseri umanie sono variazioni di percetroni multistrato.
 
 P composta da più layer come 
 
@@ -118,13 +118,13 @@ P composta da più layer come
 - Fully Connected (dense)
 - Pesi
 
-[Untitled](Relazione/Untitled.png)
+![Untitled](Relazione/Untitled.png)
 
 ### LSTM (Long Short Term Memory)
 
 Sono un tipo speciale di RNN (Recurrent Neural Network) che sono state progettate per mantenere in memoria e quindi funzionare meglio come una mente umana. è composta da celle, porte di input, porte di output e porte di dimenticanza, quindi ad ogni iterazione i valori passano da queste porte.
 
-[Untitled](Relazione/Untitled1.png)
+![Untitled](Relazione/Untitled%201.png)
 
 # Creazione del dataset
 
@@ -196,7 +196,7 @@ Pendulum
         return model
     ```
     
-    [Untitled](Relazione/Untitled 2.png)
+    ![Untitled](Relazione/Untitled%202.png)
     
     Attraverso il comando `model.fit(obs_data, act_data, epochs=50)` abbiamo addestrato la rete per 5 epoche su i dataset creati.
     
@@ -251,7 +251,7 @@ Pendulum
         return model
     ```
     
-    [Untitled](Relazione/Untitled 3.png)
+    ![Untitled](Relazione/Untitled%203.png)
     
     Come per la CNN abbiamo addestrato la rete per 50 epoche usando gli stessi dataset.
     
@@ -358,7 +358,7 @@ Pendulum
 
 - Modello
     
-    La LSTM testata per questo task è la seguete:
+    La LSTM testata per questo task è la seguente:
     
     ```python
     def create_model(states, actions):
