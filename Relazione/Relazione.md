@@ -118,13 +118,13 @@ P composta da più layer come
 - Fully Connected (dense)
 - Pesi
 
-![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled.png)
+![Untitled](Relazione/Untitled.png)
 
 ### LSTM (Long Short Term Memory)
 
 Sono un tipo speciale di RNN (Recurrent Neural Network) che sono state progettate per mantenere in memoria e quindi funzionare meglio come una mente umana. è composta da celle, porte di input, porte di output e porte di dimenticanza, quindi ad ogni iterazione i valori passano da queste porte.
 
-![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%201.png)
+![Untitled](Relazione/Untitled1.png)
 
 # Creazione del dataset
 
@@ -196,7 +196,7 @@ Pendulum
         return model
     ```
     
-    ![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%202.png)
+    ![Untitled](Relazione/Untitled 2.png)
     
     Attraverso il comando `model.fit(obs_data, act_data, epochs=50)` abbiamo addestrato la rete per 5 epoche su i dataset creati.
     
@@ -251,7 +251,7 @@ Pendulum
         return model
     ```
     
-    ![Untitled](Relazione%2004434904e52343b1915dca8c1aaac80f/Untitled%203.png)
+    ![Untitled](Relazione/Untitled 3.png)
     
     Come per la CNN abbiamo addestrato la rete per 50 epoche usando gli stessi dataset.
     
