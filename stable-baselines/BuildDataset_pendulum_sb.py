@@ -8,7 +8,7 @@ env = gym.make("Pendulum-v1")
 model = DDPG("MlpPolicy", env, verbose=1)
 model.learn(total_timesteps=5_000)
 
-trainingX, trainingY = [], []
+observations_array, actions_array = [], []
 vec_env = model.get_env()
 
 episode = 5
@@ -18,12 +18,12 @@ for i in range(episode):
     print("episode: " + str(i) + "/" + str(episode))
     obs = vec_env.reset()
     score = 0
-    training_sampleX, training_sampleY = [], []
+    training_obs, training_act = [], []
     for s in range(step):
         action, _states = model.predict(obs, deterministic=True)
 
-        training_sampleX.append(obs[0].tolist())
-        training_sampleY.append(action[0])
+        training_obs.append(obs[0].tolist())
+        training_act.append(action[0])
 
         obs, reward, done, info = vec_env.step(action)
         vec_env.render()
@@ -32,12 +32,12 @@ for i in range(episode):
             break
 
         scores.append(score)
-        trainingX += training_sampleX
-        trainingY += training_sampleY
+        observations_array += training_obs
+        actions_array += training_act
 
 print("Average: {}".format(np.mean(scores)))
 print("Median: {}".format(np.median(scores)))
 
-df = pd.DataFrame({'observation': trainingX, 'action': trainingY})
+df = pd.DataFrame({'observation': observations_array, 'action': actions_array})
 df.to_csv("dataset_sb_pendulum.csv", index=False)
 env.close()

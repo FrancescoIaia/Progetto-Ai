@@ -1,14 +1,12 @@
 import gym
 import numpy as np
 import pandas as pd
-import keras
 
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM
+from keras.layers import Dense, Dropout
 from ast import literal_eval
 
 filename = 'Dataset/dataset_keras_pendulum.csv'
-
 
 def get_data():
     data_train = pd.read_csv(filename)
@@ -57,9 +55,6 @@ def create_model(obs, state):
 
 
 act_data, obs_data = get_data()
-# env = gym.make("CartPole-v1")
-# obs = env.observation_space.shape[0]
-# action = env.action_space.n
 
 env = gym.make("Pendulum-v1")
 obs = env.observation_space.shape[0]
@@ -70,10 +65,10 @@ print(obs_data)
 
 model = create_model(obs, action)
 
-model.fit(obs_data, act_data, epochs=5)
+model.fit(obs_data, act_data, epochs=50)
 
 scores = []
-episode = 5
+episode = 10
 steps = 200
 for i in range(episode):
     print("Episode: " + str(i) + "/" + str(episode))

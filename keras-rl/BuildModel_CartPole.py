@@ -1,9 +1,5 @@
 import gym
-import random
-
-import tensorflow as tf
 import numpy as np
-import pandas as pd
 import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Activation, LSTM, Embedding
