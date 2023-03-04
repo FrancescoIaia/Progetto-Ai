@@ -1,12 +1,16 @@
 # Progetto AI Reinforcement Learning 
-### Emanuele Masiero 872695
-### Iaia Francesco 869373
+### Emanuele Masiero 
+### Iaia Francesco 
 # La releazione del progetto è all'interno del [file](Relazione/Relazione.md)
 # Struttura Git
+
 - [Dataset](Dataset): Cartella contenente tutti i dataset commentati nella relazione
-- [CNN_test_cartpole.py](CNN_test_cartpole.py): 
-- [LSTM_test.py](LSTM_test_cartpole.py): 
-- [README.md](README.md): Questo Readme
+- [CNN_test_cartpole](CNN_test_cartpole.py): File che esegue un test di una cnn sul problema cartpole 
+- [CNN_test_pendulum](CNN_test_pendulum.py): File che esegue un test di una cnn sul problema pendulum 
+- [LSTM_test_cartpole](LSTM_test_cartpole.py): File che esegue un test di una LSTM sul problema cartpole 
+- [LST_test_pendulum](LSTM_test_pendulum.py): File che esegue un test di una LSTM sul problema pendulum 
+- [Relazione](Relazione/Relazione.md): Relazione dettagliata del progetto con discussione risultati
+
 ## Keras-rl
 Dentro questa cartella ci sono tutti i file che utilizzano la libreria Keras-rl
 - [BuildModel_CartPole](keras-rl/BuildModel_CartPole.py): File usato per creare i pesi, con problema cartpole e DQNAgent
