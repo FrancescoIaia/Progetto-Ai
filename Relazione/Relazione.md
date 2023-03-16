@@ -388,16 +388,6 @@ Pendulum
     
 - Test
     
-    ### Test con dataset creato random
-    
-    Con questo test abbiamo capito l’importanza di un dataset già addestrato dato che con circa 400k osservazioni comunque viene una media estremamente scarsa
-    
-    ```python
-    Episode 10/10
-    Average: -1233.673583984375
-    Median: -1239.1529541015625
-    ```
-    
     ### Test con dataset creato da Keras-rl
     
     Test eseguito con il dataset ricavato da keras-rl su 20k entry funziona sempre abbastanza bene. Abbiamo provato a fare una run con 10k entry per compararlo a quello di stable-baseline però abbiamo visto che a differenza dell’altro questo funziona molto bene anche con meno dati, quindi possiamo supporre che il modello di keras abbia imparato meglio il problema.
@@ -449,7 +439,15 @@ Pendulum
     Average: -1498.6988525390625
     Median: -1508.775146484375
     ```
+    ### Test con dataset creato random
     
+    Con questo test abbiamo capito l’importanza di un dataset già addestrato dato che con circa 400k osservazioni comunque viene una media estremamente scarsa
+    
+    ```python
+    Episode 10/10
+    Average: -1233.673583984375
+    Median: -1239.1529541015625
+    ```
 
 # Conclusioni
 
